@@ -3,7 +3,7 @@ import { withFormik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 
-function LoginForm({ values, errors, touched, isSubmitting }) {
+function LoginForm({ addUser, values, errors, touched, isSubmitting }) {
     return (
         <div className="login-form">
             <Form>
@@ -53,10 +53,11 @@ const FormikLoginForm = withFormik({
             .min(8, 'Password must be 8 characters or longer')
             .required('Password is required')
     }),
-    handleSubmit(values, { resetForm, setErrors, setSubmitting }) {
+    handleSubmit(values, { props, resetForm, setErrors, setSubmitting }) {
         axios
             .post('https://reqres.in/api/users', values)
             .then(res => {
+                props.addUser(res.data);
                 console.log(res); // Data was created successfully and logs to console
                 resetForm();
                 setSubmitting(false);
